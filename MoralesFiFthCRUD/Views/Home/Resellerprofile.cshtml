@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<MoralesFiFthCRUD.ViewModels.ProductViewModel>
+@{
     ViewBag.Title = "Resellerprofile";
 }
 @{
@@ -9,7 +10,7 @@
 <head>
     <title>Re-seller Profile</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="~/Content/Resellerprofile.css" />
@@ -27,15 +28,24 @@
                     <li class="nav-item">
                         <a class="nav-link" href="MessageUs">Message us</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Profile
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="SellerView">Add</a>
-                            <a class="dropdown-item" href="#">Logout</a>
-                        </div>
-                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Profile
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="SellerView">Add item</a>
+                                <a class="dropdown-item" href="~/Home/Logout">Logout</a>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="Login">Login</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -57,12 +67,7 @@
                     <!-- Disable file upload -->
                     <input type="file" class="text-center center-block file-upload" disabled>
                 </div><hr><br>
-                <div class="panel panel-default">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
-                        <div class="panel-body"><a href="http://PLANTSHOP.com">PLANTSHOP.com</a></div>
-                    </div>
-                </div>
+                
                 <ul class="list-group">
                     <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
                     <!-- Populate list items -->
@@ -124,77 +129,63 @@
                                 </div>
                             </div>
                             <!-- Featured Plants Section -->
-                            <section class="bg-light featured-plants">
-                                <div class="container py-5">
-                                    <h2 class="text-center mb-4">MOST SOLD ITEMS</h2>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <img class="card-img-top" src="https://www.w3schools.com/howto/img_fjords.jpg" alt="Plant Image">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Succulent Plant</h5>
-                                                    <p class="card-text">Perfect for small spaces and minimal care.</p>
-                                                    <a href="#" class="btn btn-success">Check Now</a>
-                                                    <!-- Rating -->
-                                                    <div class="rating" id="succulent-rating">
-                                                        <input type="radio" id="s-star5" name="s-rating" value="5"><label for="s-star5"></label>
-                                                        <input type="radio" id="s-star4" name="s-rating" value="4"><label for="s-star4"></label>
-                                                        <input type="radio" id="s-star3" name="s-rating" value="3"><label for="s-star3"></label>
-                                                        <input type="radio" id="s-star2" name="s-rating" value="2"><label for="s-star2"></label>
-                                                        <input type="radio" id="s-star1" name="s-rating" value="1"><label for="s-star1"></label>
-                                                    </div>
-                                                    <!-- End Rating -->
+                            <div class="row">
+                                <!-- Fetch data from the database and dynamically generate cards -->
+                                <!-- Fetch data from the database and dynamically generate cards -->
+                                @foreach (var product in Model)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- Convert the image data to base64 and use it as the src attribute -->
+                                            @if (product.ProductImg != null)
+                                            {
+                                                <img src="data:image;base64,@(Convert.ToBase64String(product.ProductImg))" class="card-img-top" alt="Product Image">
+                                            }
+                                            else
+                                            {
+                                                <span>No Image</span>
+                                            }
+                                            <div class="card-body">
+                                                <h5 class="card-title">@product.ProductName</h5>
+                                                <p class="card-text">@product.Description</p>
+                                                <p class="card-text">Price: ₱@product.Price</p> <!-- Display price -->
+                                                <p class="card-text">Quantity: @product.Quantity</p>
+                                                <p class="card-text">Category: @product.Category</p> <!-- Display category -->
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
+                                                    <a href="~/Home/DeleteProduct/@product.ProductID" class="btn btn-danger">Delete</a>
+                                                }
+                                                else
+                                                {
+                                                    <p>""</p>
+                                                }
+
+
+
+
+
+                                                <a href="#" class="btn btn-success">Check Now</a>
+                                                <!-- Rating -->
+                                                <div class="rating" id="rating-@product.ProductID">
+                                                    @* Populate rating dynamically *@
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <img class="card-img-top" src="https://www.w3schools.com/howto/img_mountains.jpg" alt="Plant Image">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Fiddle Leaf Fig</h5>
-                                                    <p class="card-text">A statement plant for any room.</p>
-                                                    <a href="#" class="btn btn-success">Check Now</a>
-                                                    <!-- Rating -->
-                                                    <div class="rating" id="fig-rating">
-                                                        <input type="radio" id="f-star5" name="f-rating" value="5"><label for="f-star5"></label>
-                                                        <input type="radio" id="f-star4" name="f-rating" value="4"><label for="f-star4"></label>
-                                                        <input type="radio" id="f-star3" name="f-rating" value="3"><label for="f-star3"></label>
-                                                        <input type="radio" id="f-star2" name="f-rating" value="2"><label for="f-star2"></label>
-                                                        <input type="radio" id="f-star1" name="f-rating" value="1"><label for="f-star1"></label>
-                                                    </div>
-                                                    <!-- End Rating -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="card">
-                                                <img class="card-img-top" src="https://www.w3schools.com/howto/img_lights.jpg" alt="Plant Image">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Monstera Deliciosa</h5>
-                                                    <p class="card-text">Known for its unique leaf shape and easy care.</p>
-                                                    <a href="#" class="btn btn-success">Check Now</a>
-                                                    <!-- Rating -->
-                                                    <div class="rating" id="monstera-rating">
-                                                        <input type="radio" id="m-star5" name="m-rating" value="5"><label for="m-star5"></label>
-                                                        <input type="radio" id="m-star4" name="m-rating" value="4"><label for="m-star4"></label>
-                                                        <input type="radio" id="m-star3" name="m-rating" value="3"><label for="m-star3"></label>
-                                                        <input type="radio" id="m-star2" name="m-rating" value="2"><label for="m-star2"></label>
-                                                        <input type="radio" id="m-star1" name="m-rating" value="1"><label for="m-star1"></label>
-                                                    </div>
-                                                    <!-- End Rating -->
-                                                </div>
+                                                <!-- End Rating -->
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </section>
-                            <!-- End Featured Plants Section -->
+                                }
+
+                            </div>
+
                         </form>
+
+
                     </div>
-                </div><!--/tab-content-->
-            </div><!--/col-9-->
-        </div><!--/row-->
-    </div><!--/container-->
+                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

@@ -1,0 +1,65 @@
+﻿@model List<MoralesFiFthCRUD.ViewModels.ProductViewModel>
+@{
+
+    Layout = "~/Views/Shared/_LayoutStoreOwner.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-img-top {
+            height: 200px; /* Set the height of the image */
+            object-fit: cover; /* Ensure the image covers the entire container */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <!-- Product Image -->
+                        @if (product.ProductImg != null)
+                        {
+                            <img src="data:image;base64,@(Convert.ToBase64String(product.ProductImg))" class="card-img-top" alt="Product Image">
+                        }
+                        else
+                        {
+                            <span>No Image</span>
+                        }
+                        <!-- Product Details -->
+                        <div class="card-body">
+
+                            <h5 class="card-title">ProductName: @product.ProductName</h5>
+                            <p class="card-text">Description: @product.Description</p>
+                            <p class="card-text">Price:₱@product.Price</p>
+                            <p class="card-text">Category: @product.Category</p>
+                          
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

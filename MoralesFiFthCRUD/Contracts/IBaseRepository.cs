@@ -14,8 +14,9 @@ namespace MoralesFiFthCRUD.Contracts
 
     public enum UserRole
     {
-        Tutor,
-        Client
+        Admin,
+        Seller,
+        Buyer
     }
     public class User
     {
@@ -33,6 +34,7 @@ namespace MoralesFiFthCRUD.Contracts
         ErrorCode Update(object id, T t);
 
         ErrorCode Delete(object id);
+        ErrorCode DeleteProduct(object id);
 
     }
 }

@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -91,6 +90,14 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">Plant Shop</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <span class="navbar-text ml-auto">Welcome, @User.Identity.Name!</span>
+            }
+            else
+            {
+                <span class="navbar-text ml-auto">Welcome, GUEST!</span>
+            }
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -99,7 +106,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="Dashboard">Home</a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="About">About</a>
                     </li>
@@ -107,13 +114,36 @@
                     <li class="nav-item">
                         <a class="nav-link" href="ContactUs">Contact</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
-                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            @if (User.IsInRole("Seller"))
+                            {
+                                <a class="nav-link" href="ResellerProfile">Profile</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link" href="#">Profile</a>
+                            }
+                        </li>
+                        <li class="nav-item">
+                            <form action="@Url.Action("Logout", "Home")" method="post" class="form-inline">
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="Login">Login</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
     </nav>
+
     <div class="container body-content">
         @RenderBody()
     </div>

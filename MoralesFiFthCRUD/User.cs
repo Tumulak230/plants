@@ -17,14 +17,21 @@ namespace MoralesFiFthCRUD
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            this.Products = new HashSet<Products>();
             this.UserRole = new HashSet<UserRole>();
         }
     
         public int id { get; set; }
         public string username { get; set; }
         public string password { get; set; }
+        public string email { get; set; }
+        public string address { get; set; }
+        public string firstname { get; set; }
+        public string lastname { get; set; }
+        public Nullable<int> phonenumber { get; set; }
     
-        public virtual Role Role { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Products> Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRole { get; set; }
     }

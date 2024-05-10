@@ -7,6 +7,10 @@ using System.Data.Entity;
 
 namespace MoralesFiFthCRUD.Repository
 {
+    public class ProductRepository : BaseRepository<Products>
+    {
+
+    }
     public class BaseRepository<T> : IBaseRepository<T>
         where T : class
     {
@@ -14,7 +18,7 @@ namespace MoralesFiFthCRUD.Repository
         public DbSet<T> _table;
         public BaseRepository()
         {
-            _db = new database1Entities();
+            _db = new database2Entities1();
             _table = _db.Set<T>();
         }
         public T Get(object id)
@@ -63,6 +67,21 @@ namespace MoralesFiFthCRUD.Repository
             {
                 var oldOjb = Get(id);
                 _db.Entry(oldOjb).CurrentValues.SetValues(t);
+                _db.SaveChanges();
+                return ErrorCode.Success;
+            }
+            catch (Exception ex)
+            {
+                return ErrorCode.Error;
+            }
+        }
+
+        public ErrorCode DeleteProduct(object ProductID)
+        {
+            try
+            {
+                var obj = Get(ProductID);
+                _table.Remove(obj);
                 _db.SaveChanges();
                 return ErrorCode.Success;
             }

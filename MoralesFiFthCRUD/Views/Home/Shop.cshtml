@@ -1,4 +1,5 @@
-﻿@{ViewBag.Title = "Shop";
+﻿@model List<MoralesFiFthCRUD.ViewModels.ProductViewModel>
+@{ViewBag.Title = "Shop";
     Layout = "~/Views/Shared/_LayoutShop.cshtml";
 }
 <div class="container">
@@ -8,10 +9,11 @@
         </div>
         <div class="col-md-4">
             <!-- Search Bar -->
-            <form class="form-inline my-4 my-lg-0" onsubmit="searchProducts(event)">
-                <input class="form-control mr-sm-2" type="search" id="searchInput" placeholder="Search for products..." aria-label="Search">
+            <form class="form-inline my-4 my-lg-0" method="get" action="@Url.Action("Shop", "Home")">
+                <input class="form-control mr-sm-2" type="search" name="searchTerm" placeholder="Search for products..." aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+
         </div>
     </div>
 
@@ -36,131 +38,37 @@
 
     <!-- Featured Products -->
     <div class="row mt-4" id="featuredProducts">
-        <!-- Products will be displayed dynamically here -->
-    </div>
-</div>
-
-<!-- jQuery (required by Bootstrap) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- Bootstrap JS (must be placed after jQuery) -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    const allProducts = [
-        { name: "Monstera Deliciosa", category: "Plants", price: "$25.00" },
-        { name: "Snake Plant", category: "Plants", price: "$18.00" },
-        { name: "Fiddle Leaf Fig", category: "Plants", price: "$30.00" },
-        { name: "Organic Liquid Fertilizer", category: "Fertilizer", price: "$10.00" },
-        { name: "Powder Fertilizer", category: "Fertilizer", price: "$12.00" },
-        { name: "Granular Fertilizer", category: "Fertilizer", price: "$15.00" },
-        { name: "Loam soil", category: "Soil", price: "$8.00" },
-        { name: "Lush soil", category: "Soil", price: "$10.00" },
-        { name: "Top soil", category: "Soil", price: "$12.00" }
-
-    ];
-
-    // Display all products initially
-    displayAllProducts();
-
-    // Function to display products based on search query
-    function searchProducts(event) {
-        event.preventDefault(); // Prevent form submission
-
-        const searchInput = document.getElementById("searchInput");
-        const searchTerm = searchInput.value.trim().toLowerCase();
-
-        const filteredProducts = allProducts.filter(product => {
-            return product.name.toLowerCase().includes(searchTerm);
-        });
-
-        displayProducts(filteredProducts);
-    }
-
-    // Function to display all products
-    function displayAllProducts() {
-        displayProducts(allProducts);
-    }
-
-    // Function to display popular products
-    function displayPopularProducts() {
-        const popularProducts = [
-            { name: "Monstera Deliciosa", category: "Plants", price: "$25.00" },
-            { name: "Snake Plant", category: "Plants", price: "$18.00" },
-            { name: "Organic Liquid Fertilizer", category: "Fertilizer", price: "$10.00" },
-            { name: "Loam soil", category: "Soil", price: "$8.00" }
-
-        ];
-
-        displayProducts(popularProducts);
-    }
-
-    // Function to display plant products
-    function displayPlants() {
-        const plantProducts = allProducts.filter(product => product.category === "Plants");
-        displayProducts(plantProducts);
-    }
-
-    // Function to display fertilizer products
-    function displayFertilizerProducts() {
-        const fertilizerProducts = allProducts.filter(product => product.category === "Fertilizer");
-        displayProducts(fertilizerProducts);
-    }
-
-    // Function to display soil products
-    function displaySoilProducts() {
-        const soilProducts = allProducts.filter(product => product.category === "Soil");
-        displayProducts(soilProducts);
-    }
-
-    // Function to display products dynamically
-    function displayProducts(products) {
-        const productContainer = document.getElementById("featuredProducts");
-        productContainer.innerHTML = ""; // Clear previous products
-
-        products.forEach(product => {
-            let imageUrl = ""; // Default image URL
-
-            // Set specific image URLs based on product name
-            if (product.name === "Snake Plant") {
-                imageUrl = "https://abeautifulmess.com/wp-content/uploads/2023/05/Snakeplant-4.jpg";
-            } else if (product.name === "Fiddle Leaf Fig") {
-                imageUrl = "https://tierraplants.com/wp-content/uploads/2017/05/Fiddle-leaf-edit.jpg";
-            } else if (product.name === "Organic Liquid Fertilizer") {
-                imageUrl = "https://i.ebayimg.com/images/g/82YAAOSw45lky347/s-l1200.webp";
-            } else if (product.name === "Powder Fertilizer") {
-                imageUrl = "https://img.agriexpo.online/images_ag/photo-m2/190957-17385926.jpg";
-            } else if (product.name === "Granular Fertilizer") {
-                imageUrl = "https://yardmastery.com/cdn/shop/products/YMStressBlend_BothBags_533x.jpg?v=1664543633";
-            } else if (product.name === "Loam soil") {
-                imageUrl = "https://lzd-img-global.slatic.net/g/p/c3d74038483dee259edf0643fb9c83a0.png_360x360q75.png_.webp";
-            } else if (product.name === "Lush soil") {
-                imageUrl = "https://lzd-img-global.slatic.net/g/ff/kf/S56d6cc45723e4da986a468f4c40bb352C.jpg_360x360q75.jpg_.webp";
-            } else if (product.name === "Top soil") {
-                imageUrl = "https://marshallsgarden.com/cdn/shop/files/topsoil30l_westland_11500005_0040_a_lifestyle_1059833e-c3f5-4379-80fa-3b0d72fd86b9_300x300.jpg?v=1708962554";
-            } else {
-                imageUrl = "https://www.smallandgreen.com/wp-content/uploads/2022/04/R_8FXiuKEemVpNz4j5wv6w-pnja_Dv0EeyYyr60XqKDaw-scaled.jpeg";
-            }
+        <!-- Display products dynamically -->
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <!-- Card content -->
+                    @if (product.ProductImg != null)
+                    {
+                        <img src="data:image;base64,@(Convert.ToBase64String(product.ProductImg))" class="card-img-top" alt="Product Image">
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                    <!-- Product Details -->
+                    <div class="card-body">
+                        
+                        <h5 class="card-title">@product.ProductName</h5>
+                        <p class="card-text">Category: @product.Category</p>
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text">@product.Price</p>
+                        <a href="@Url.Action("test", "Home", new { username = product.sellerName })">@product.sellerName</a>
 
 
-            const productCard = `
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-image">
-                            <img src="${imageUrl}" alt="Product Image">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="card-text">Description goes here...</p>
-                            <p class="price">${product.price}</p>
-                            <button class="btn btn-shop">Shop Now</button>
-                        </div>
+                        
                     </div>
                 </div>
-            `;
-            productContainer.innerHTML += productCard;
-        });
-    }
-</script>
+            </div>
+        }
+    </div>
+</div>
 
 <style>
     /* Styles for product image containers */
@@ -169,9 +77,22 @@
         overflow: hidden; /* Hide any overflow (e.g., if images are larger) */
     }
 
-        /* Styles for product images */
-        .card-image img {
-            width: 100%; /* Ensure images take up full width of their containers */
-            height: auto; /* Maintain aspect ratio */
-        }
+
+
+
+
+
+
+    <style >
+    /* Styles for product image containers */
+    .card-image {
+        height: 400px; /* Set the desired height for the image container */
+        overflow: hidden; /* Hide any overflow (e.g., if images are larger) */
+    }
+
+    /* Styles for product images */
+    .card-image img {
+        width: 100%; /* Ensure images take up full width of their containers */
+        height: auto; /* Maintain aspect ratio */
+    }
 </style>

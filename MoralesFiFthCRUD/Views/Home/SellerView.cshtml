@@ -1,110 +1,80 @@
 ﻿@{
+    ViewBag.Title = "Add Item";
+}
+
+@{
     Layout = null;
 }
+@Html.AntiForgeryToken()
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Shop</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="path/to/your/CSS/SellerView.css">
-
-    <style>
-        /* Additional custom styles can be added here */
-        .navbar {
-            background-color: #155724; /* Dark green color */
-        }
-
-        .dropdown-item {
-            margin-bottom: 5px; /* Add margin between dropdown items */
-        }
-    </style>
+    <title>Add Product</title>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-darkgreen fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">Plant Shop</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Message us</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Profile
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="SellerView">Add</a>
-                            <a class="dropdown-item" href="#">Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container my-5">
-        <div class="row">
-            <div class="col-md-4">
-                <!-- Dropdown Categories -->
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Categories
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#" onclick="displayPlants()">Plants</a>
-                        <a class="dropdown-item" href="#" onclick="displayFertilizerProducts()">Fertilizer</a>
-                        <a class="dropdown-item" href="#" onclick="displaySoilProducts()">Soil</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Upload Product Form -->
-        <div class="row mt-5">
-            <div class="col-md-8">
-                <h2>Upload Product</h2>
-                <form action="#" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="productImage">Upload Picture:</label>
-                        <input type="file" id="productImage" name="productImage" accept="image/*" required class="form-control-file">
-                    </div>
-                    <div class="form-group">
-                        <label for="productDescription">Description:</label>
-                        <textarea id="productDescription" name="productDescription" rows="4" required class="form-control"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="productPrice">Price:</label>
-                        <input type="number" id="productPrice" name="productPrice" step="0.01" required class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                </form>
-            </div>
+    <h2>Add Product</h2>
+   @using (Html.BeginForm("SellerView", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+   {
+    <!-- Other form fields -->
+    <div class="form-group">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="categoryId">Category:</label>
+        <!-- Assuming categoryId is selected from a dropdown -->
+        <select id="categoryId" name="categoryId" class="form-control" required>
+            <option value="1">Plant</option>
+            <option value="2">Soil</option>
+            <option value="3">Fertilizer</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="productImage">Product Image:</label>
+        <input type="file" id="productImage" name="productImage" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="productDescription">Product Description:</label>
+        <textarea id="productDescription" name="productDescription" class="form-control" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="productPrice">Price:</label>
+        <input type="number" id="productPrice" name="productPrice" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="productQuantity">Quantity:</label>
+        <div class="input-group">
+            <span class="input-group-prepend">
+                <button type="button" class="btn btn-outline-secondary" onclick="decrementQuantity()">-</button>
+            </span>
+            <input type="number" id="productQuantity" name="productQuantity" class="form-control" value="1" min="1" max="999" required>
+            <span class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" onclick="incrementQuantity()">+</button>
+            </span>
         </div>
     </div>
 
-    <!-- Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <button type="submit" class="btn btn-primary">Submit</button>
+   }
 
-    <!-- Custom Script -->
-    <script>
-    // This script is to handle dropdown toggle
-    $(document).ready(function() {
-        $('.dropdown-toggle').dropdown(); // Initialize Bootstrap dropdown
-    });
-    </script>
+    @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
 
 </body>
 </html>
+<script src="~/Scripts/quantityselector.js"></script>
